@@ -1,4 +1,4 @@
-package kr.jay.batch.part3;
+package kr.jay.batch;
 
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.test.JobLauncherTestUtils;
