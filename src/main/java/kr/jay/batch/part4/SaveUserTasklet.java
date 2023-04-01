@@ -45,7 +45,7 @@ public class SaveUserTasklet implements Tasklet {
 		users.addAll(IntStream.range(0, SIZE)
 			.mapToObj(i -> new User("test userName " + i, Collections.singletonList(Orders.builder()
 				.amount(200_000)
-				.createdDate(LocalDate.of(2020, 11, 2))
+				.createdDate(LocalDate.of(2020, 12, 2))
 				.itemName("iteam" + i)
 				.build())))
 			.collect(Collectors.toList()));
