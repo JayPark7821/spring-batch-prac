@@ -39,5 +39,7 @@ class UserConfigurationTest {
 			.isEqualTo(300);
 
 		assertThat(userRepository.count()).isEqualTo(400);
+
+
 	}
 }
