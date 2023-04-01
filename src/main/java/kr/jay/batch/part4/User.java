@@ -1,15 +1,21 @@
 package kr.jay.batch.part4;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
+import kr.jay.batch.part5.Orders;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,21 +33,29 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private Level level = Level.NORMAL;
 
-	private int totalAmount;
+	@OneToMany(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "user_id")
+	private List<Orders> orders;
 
 	private LocalDate updateDate;
 
-	public User(final String username, final int totalAmount) {
+	@Builder
+	public User(final String username, final List<Orders> orders) {
 		this.username = username;
-		this.totalAmount = totalAmount;
+		this.orders = orders;
 	}
 
+	private int getTotalAmount() {
+		return this.orders.stream()
+			.mapToInt(Orders::getAmount)
+			.sum();
+	}
 	public boolean availableLevelUp() {
-		return Level.availableLevelUp(this.level, this.totalAmount);
+		return Level.availableLevelUp(this.level, this.getTotalAmount());
 	}
 
 	public Level levelUp() {
-		Level nextLevel = Level.getNextLevel(this.totalAmount);
+		Level nextLevel = Level.getNextLevel(this.getTotalAmount());
 		this.level = nextLevel;
 		this.updateDate = LocalDate.now();
 		return nextLevel;
