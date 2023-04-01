@@ -32,6 +32,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
 
+import kr.jay.batch.part5.JobParametersDecider;
 import kr.jay.batch.part5.OrderStatistics;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,8 +63,11 @@ public class UserConfiguration {
 			.incrementer(new RunIdIncrementer())
 			.start(this.saveUserStep())
 			.next(this.userLevelUpStep())
-			.next(this.orderStatisticsStep(null))
 			.listener(new LevelUpJobExecutionListener(userRepository))
+			.next(new JobParametersDecider("date"))
+			.on(JobParametersDecider.CONTINUE.getName())
+			.to(this.orderStatisticsStep(null))
+			.build()
 			.build();
 	}
 
